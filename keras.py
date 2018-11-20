@@ -9,8 +9,8 @@ data['country'] = data['country'].cat.codes
 
 data.drop(['drop_column_name'], axis=1)
 
-from sklearn import cross_validation
-X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.3, random_state=42)
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
 X_train.sample(frac=1)
 
@@ -24,6 +24,17 @@ from keras.utils import np_utils
 from keras.callbacks import EarlyStopping
 
 %%time
+
+
+from sklearn import metrics
+from keras import backend as K
+import tensorflow as tf
+def auc(y_true, y_pred):
+    auc = tf.metrics.auc(y_true, y_pred)[1]
+    K.get_session().run(tf.local_variables_initializer())
+    return auc
+
+
 
 early_stopping_monitor = EarlyStopping(patience=5)
 X_train_, X_val, y_train_, y_val = cross_validation.train_test_split(X_train, y_train, test_size=0.2, random_state=42)
